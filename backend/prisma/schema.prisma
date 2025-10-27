@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "./generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -17,8 +18,8 @@ model Article {
   createdAt   DateTime @default(now())
   authorId    String
   image       String
-  
-  author      User     @relation(fields: [authorId], references: [id])
+
+  author User @relation(fields: [authorId], references: [id])
 }
 
 model User {
