@@ -21,7 +21,9 @@ export function Header() {
           {user ? (
             <>
               <HeaderLink href="/cuenta">Cuenta</HeaderLink>
-              <HeaderLink href="/articulos/nuevo">Crear</HeaderLink>
+              {user.role === "AUTHOR" || user.role === "ADMIN" && (
+                <HeaderLink href="/articulos/nuevo">Crear</HeaderLink>
+              )}
             </>
           ) : (
             <HeaderLink href="/registro">Registrarse</HeaderLink>
