@@ -52,7 +52,7 @@ export default function ArticlePage({ id }: { id: string }) {
         <h1 className="text-[#0e1c40] font-title text-7xl mt-5 mb-2.5">
           {article.title}
         </h1>
-        <h2 className="text-gray-600 text-3xl mb-[15px]">{article.subtitle}</h2>
+        <h2 className="text-gray-600 text-3xl mb-[15px]">{article.description}</h2>
         <h3 className="text-gray-600 text-[18px] mb-[30px]">{`Por ${authorName}`}</h3>
 
         <div className="grid gap-x-10 gap-y-10 desktop:grid-cols-[2fr_1fr]">
