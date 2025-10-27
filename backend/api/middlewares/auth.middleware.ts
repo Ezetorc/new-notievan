@@ -1,8 +1,6 @@
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { env } from "../configuration/env.configuration.js";
 import { prisma } from "../configuration/prisma.configuration.js";
-import { NotFoundError } from "../models/errors/not-found.error.js";
-import { UnauthorizedError } from "../models/errors/unauthorized.error.js";
 import type { JWTUser } from "../models/jwt-user.model.js";
 import type { Request, Response, NextFunction } from "express";
 

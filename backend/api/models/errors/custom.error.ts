@@ -1,10 +1,8 @@
-import type { ContentfulStatusCode } from "hono/utils/http-status";
-
 export class CustomError {
-    code: ContentfulStatusCode
+    code: number
     value: any
 
-    constructor(value: any, status?: ContentfulStatusCode) {
+    constructor(value: any, status?: number) {
         this.value = value;
         this.code = status || 500;
     }
