@@ -1,4 +1,4 @@
-import { SanitizedUser } from './../../../backend/src/models/sanitized-user.model';
+import type { SanitizedUser } from "./sanitized-user.model";
 
 export type Session = {
   user: SanitizedUser;

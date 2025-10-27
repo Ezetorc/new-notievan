@@ -1,8 +1,8 @@
 import type { ChangeEvent } from "react";
-import { Role } from "../../../../../backend/prisma/generated/prisma";
-import type { SanitizedUser } from "../../../../../backend/src/models/sanitized-user.model";
 import { useState } from "react";
 import { UsersService } from "../../../services/users.service";
+import type { Role } from "../../../models/role.model";
+import type { SanitizedUser } from "../../../models/sanitized-user.model";
 
 export function UserDisplay({ user }: { user: SanitizedUser }) {
   const [newRole, setNewRole] = useState<Role>(user.role);

@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import type { SanitizedUser } from '../../../backend/src/models/sanitized-user.model'
 import { SessionService } from '../services/session.service'
+import type { SanitizedUser } from '../models/sanitized-user.model'
 
 type SessionStore = {
   user?: SanitizedUser

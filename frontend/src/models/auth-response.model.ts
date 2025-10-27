@@ -1,3 +1,3 @@
-import type { SanitizedUser } from "../../../backend/src/models/sanitized-user.model";
+import type { SanitizedUser } from "./session.model";
 
 export type AuthResponse = { user: SanitizedUser; token: string }

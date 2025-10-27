@@ -1,7 +1,7 @@
 
-import type { SanitizedUser } from "../../../backend/src/models/sanitized-user.model";
-import type { Session } from "../models/session.model";
 import { isTokenValid } from "../utilities/is-token-valid.utility";
+import type { Session } from "../models/session.model";
+import type { SanitizedUser } from "../models/sanitized-user.model";
 
 export class SessionService {
   private static name = "session";

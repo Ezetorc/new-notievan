@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Route, type RouteProps, type Params, useLocation } from "wouter";
 import { SessionService } from "../services/session.service";
-import type { Role } from "../../../backend/prisma/generated/prisma/client";
+import type { Role } from "../models/role.model";
 
 export function ProtectedRoute<P extends Params>({
   component: Component,

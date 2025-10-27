@@ -1,8 +1,8 @@
 import axios, { AxiosError } from "axios";
 import { env } from "../configuration/env.configuration";
-import type { SanitizedUser } from "../../../backend/src/models/sanitized-user.model";
-import type { Role } from "../../../backend/prisma/generated/prisma/client";
 import { SessionService } from "./session.service";
+import type { Role } from "../models/role.model";
+import type { SanitizedUser } from "../models/sanitized-user.model";
 
 export class UsersService {
   private static API_BASE = `${env.baseUrl}/users`;

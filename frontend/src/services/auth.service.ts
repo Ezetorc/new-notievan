@@ -1,15 +1,15 @@
-import type { LoginDtoType } from './../../../backend/src/models/dtos/login.dto';
-import type { RegisterDtoType } from './../../../backend/src/models/dtos/register.dto';
 import axios, { AxiosError } from "axios";
 import { env } from "../configuration/env.configuration";
 import type { AuthResponse } from '../models/auth-response.model';
-import type { SanitizedUser } from '../../../backend/src/models/sanitized-user.model';
 import { SessionService } from './session.service';
+import type { SignUpFormData } from "../pages/SignUp/models/sign-up-form-data.model";
+import type { SignInFormData } from "../pages/SignIn/models/sign-in-form-data.model";
+import type { SanitizedUser } from "../models/sanitized-user.model";
 
 export class AuthService {
   private static API_BASE = `${env.baseUrl}/auth`;
 
-  static async register(data: RegisterDtoType) {
+  static async register(data: SignUpFormData) {
     try {
       const response = await axios.post<AuthResponse>(`${this.API_BASE}/register`, data);
 
@@ -24,7 +24,7 @@ export class AuthService {
     }
   }
 
-  static async login(data: LoginDtoType) {
+  static async login(data: SignInFormData) {
     try {
       const response = await axios.post<AuthResponse>(`${this.API_BASE}/login`, data);
 
