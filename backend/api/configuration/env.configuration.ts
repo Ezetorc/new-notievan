@@ -1,4 +1,6 @@
-process.loadEnvFile()
+if (process.env.NODE_ENV !== 'production') {
+  process.loadEnvFile()
+}
 
 type Env = {
   jwt: {
