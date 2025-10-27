@@ -87,7 +87,7 @@ export class ArticlesService {
         `${this.API_BASE}?page=${page}&limit=${limit}`
       );
 
-      return response.data.data;
+      return response.data;
     } catch {
       return [];
     }
@@ -105,7 +105,7 @@ export class ArticlesService {
     try {
       const token = SessionService.token;
 
-      const response = await axios.get< { data: Article[] }>(
+      const response = await axios.get(
         `${this.API_BASE}/own?page=${page}&limit=${limit}`,
         {
           headers: {
@@ -114,7 +114,7 @@ export class ArticlesService {
         }
       );
 
-      return response.data.data;
+      return response.data;
     } catch {
       return [];
     }

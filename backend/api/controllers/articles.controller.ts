@@ -94,36 +94,16 @@ export class ArticlesController {
 		const { limit, page } = PaginationParamsDto.parse(request.query);
 		const skip = (page - 1) * limit;
 		const articles = await ArticlesRepository.getAll(limit, skip)
-		const totalArticles = await prisma.article.count();
-		const totalPages = Math.ceil(totalArticles / limit);
 
-		return response.json({
-			data: articles,
-			meta: {
-				page,
-				limit,
-				totalPages,
-				totalArticles,
-			},
-		})
+		return response.json(articles)
 	}
 
 	static async getOwn(request: Request, response: Response) {
 		const { limit, page } = PaginationParamsDto.parse(request.query);
 		const skip = (page - 1) * limit;
 		const articles = await ArticlesRepository.getOwn(limit, skip, request.user.id)
-		const totalArticles = await prisma.article.count();
-		const totalPages = Math.ceil(totalArticles / limit);
 
-		return response.json({
-			data: articles,
-			meta: {
-				page,
-				limit,
-				totalPages,
-				totalArticles,
-			},
-		})
+		return response.json(articles)
 	}
 
 	static async getRandom(request: Request, response: Response) {

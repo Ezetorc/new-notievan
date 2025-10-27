@@ -36,18 +36,8 @@ export class UsersController {
         const { limit, page } = PaginationParamsDto.parse(request.query);
         const skip = (page - 1) * limit;
         const users = await UsersRepository.findAll(limit, skip)
-        const totalUsers = await prisma.user.count();
-        const totalPages = Math.ceil(totalUsers / limit);
         const sanitizedUsers = users.map((user) => new SanitizedUser(user))
 
-        return response.json({
-            data: sanitizedUsers,
-            meta: {
-                page,
-                limit,
-                totalPages,
-                totalUsers,
-            },
-        })
+        return response.json(sanitizedUsers)
     }
 }

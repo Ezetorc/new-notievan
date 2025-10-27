@@ -55,7 +55,7 @@ export class UsersService {
         `${this.API_BASE}?page=${page}&limit=${limit}`
       );
 
-      return response.data.data;
+      return response.data;
     } catch {
       return [];
     }
