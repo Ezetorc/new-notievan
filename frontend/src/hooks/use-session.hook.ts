@@ -7,8 +7,6 @@ import { useSessionStore } from "../stores/session.store"
 export function useSession() {
   const { user, setUser } = useSessionStore()
 
-  console.log(user)
-
   const updateSession = async () => {
     const user = await AuthService.getUser()
 
