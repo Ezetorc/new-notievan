@@ -17,7 +17,16 @@ const LazyEditArticlePage = lazy(() => import("./pages/EditArticle/components/Ed
 const LazyDashboardPage = lazy(() => import("./pages/Dashboard/components/DashboardPage"));
 const LazyNotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      staleTime: 1000 * 60 * 10,
+      gcTime: 1000 * 60 * 15,
+    },
+  },
+});
 
 export default function App() {
   const { updateSession } = useSession()
