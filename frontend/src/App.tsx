@@ -6,6 +6,9 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { lazy, Suspense, useEffect } from "react";
 import { Loading } from "./components/Loading";
 import { useSession } from "./hooks/use-session.hook";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { persistQueryClient } from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 
 const LazyHomePage = lazy(() => import("./pages/Home/components/HomePage"));
 const LazySignUpPage = lazy(() => import("./pages/SignUp/components/SignUpPage"));
@@ -28,15 +31,25 @@ const queryClient = new QueryClient({
   },
 });
 
+const persister = createAsyncStoragePersister({
+  storage: window.localStorage,
+})
+
+persistQueryClient({
+  queryClient,
+  persister,
+})
+
 export default function App() {
   const { updateSession } = useSession()
 
   useEffect(() => {
-    if (!SessionService.isValid) {
+    if (SessionService.isValid) {
+      updateSession()
+    } else {
       SessionService.delete();
     }
 
-    updateSession()
   }, [])
 
   return (
@@ -60,6 +73,7 @@ export default function App() {
             <Route component={LazyNotFoundPage}></Route>
           </Switch>
         </main>
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Suspense>
   );
