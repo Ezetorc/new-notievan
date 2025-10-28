@@ -2,6 +2,7 @@ import { INSTAGRAM } from "../configuration/information.configuration";
 import { useSession } from "../hooks/use-session.hook";
 import { HeaderLink } from "./HeaderLink";
 import { InstagramIcon } from "./icons/InstagramIcon";
+import notievanLogoImage from "../assets/images/notievan-logo.webp"
 
 export function Header() {
   const { user } = useSession();
@@ -17,13 +18,13 @@ export function Header() {
           id="header-buttons"
         >
           <HeaderLink href="/">
-            <img className="max-w-13 aspect-square" alt="Logo de NotiEvan" src="/src/assets/images/notievan-logo.webp" />
+            <img className="max-w-13 aspect-square" alt="Logo de NotiEvan" src={notievanLogoImage} />
           </HeaderLink>
 
           {user ? (
             <>
               <HeaderLink href="/cuenta">Cuenta</HeaderLink>
-              {user.role === "AUTHOR" || user.role === "ADMIN" && (
+              {["AUTHOR", "ADMIN"].includes(user?.role) && (
                 <HeaderLink href="/articulos/nuevo">Crear</HeaderLink>
               )}
             </>
