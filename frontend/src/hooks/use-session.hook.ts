@@ -3,17 +3,24 @@ import type { SignUpFormData } from "../pages/SignUp/models/sign-up-form-data.mo
 import { AuthService } from "../services/auth.service"
 import { SessionService } from "../services/session.service"
 import { useSessionStore } from "../stores/session.store"
+import { useSelfUser } from "./use-self-user.hook"
 
 export function useSession() {
   const { user, setUser } = useSessionStore()
+  const { user: selfUser, refetch: refetchSelf } = useSelfUser()
 
   const updateSession = async () => {
-    const user = await AuthService.getUser()
+    if (selfUser) {
+      SessionService.user = selfUser
+      setUser(selfUser)
+      return
+    }
 
-    if (!user) return
-
-    SessionService.user = user
-    setUser(user)
+    const result = await refetchSelf()
+    const fetched = result.data
+    if (!fetched) return
+    SessionService.user = fetched
+    setUser(fetched)
   }
 
   const logout = () => {

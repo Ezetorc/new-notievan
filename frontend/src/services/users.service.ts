@@ -52,7 +52,11 @@ export class UsersService {
   ): Promise<SanitizedUser[]> {
     try {
       const response = await axios.get(
-        `${this.API_BASE}?page=${page}&limit=${limit}`
+        `${this.API_BASE}?page=${page}&limit=${limit}`, {
+        headers: {
+          Authorization: `Bearer ${SessionService.token}`,
+        },
+      }
       );
 
       return response.data;

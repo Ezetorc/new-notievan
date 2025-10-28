@@ -16,7 +16,7 @@ export function usePaginatedArticles({
   limit = 4,
 }: usePaginatedArticlesOptions) {
   const query = useInfiniteQuery({
-    queryKey: ["articles", type, excludeId],
+    queryKey: excludeId ? ["articles", type, excludeId] : ["articles", type],
     queryFn: async ({ pageParam = initialPage }): Promise<Article[]> => {
       switch (type) {
         case "own":
