@@ -6,7 +6,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { lazy, Suspense, useEffect } from "react";
 import { Loading } from "./components/Loading";
 import { useSession } from "./hooks/use-session.hook";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 
@@ -73,7 +72,6 @@ export default function App() {
             <Route component={LazyNotFoundPage}></Route>
           </Switch>
         </main>
-        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Suspense>
   );

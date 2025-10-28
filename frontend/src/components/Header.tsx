@@ -16,7 +16,9 @@ export function Header() {
           className="flex items-center desktop:gap-x-[40px] mobile:gap-x-[25px]"
           id="header-buttons"
         >
-          <HeaderLink href="/">Inicio</HeaderLink>
+          <HeaderLink href="/">
+            <img className="max-w-13 aspect-square" alt="Logo de NotiEvan" src="/src/assets/images/notievan-logo.webp" />
+          </HeaderLink>
 
           {user ? (
             <>
