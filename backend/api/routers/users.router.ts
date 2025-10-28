@@ -4,8 +4,8 @@ import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 export const UsersRouter = Router()
 
-UsersRouter.get("/", UsersController.getAll)
+UsersRouter.get("/", authMiddleware("ADMIN"), UsersController.getAll)
 
-UsersRouter.patch("/:id/role", authMiddleware, UsersController.updateRole)
+UsersRouter.patch("/:id/role", authMiddleware("ADMIN"), UsersController.updateRole)
 
-UsersRouter.get("/:id/name", UsersController.getNameById)
+UsersRouter.get("/:id/name", authMiddleware(), UsersController.getNameById)

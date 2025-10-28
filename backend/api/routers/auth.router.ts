@@ -8,4 +8,4 @@ AuthRouter.post("/register", AuthController.register)
 
 AuthRouter.post("/login", AuthController.login)
 
-AuthRouter.get("/", authMiddleware, AuthController.getSelf)
+AuthRouter.get("/", authMiddleware(), AuthController.getSelf)

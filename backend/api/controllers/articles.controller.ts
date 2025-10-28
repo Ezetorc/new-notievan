@@ -1,120 +1,61 @@
 import { UserIdParamDto } from "../models/dtos/user-id-param.dto.js";
-import { ArticlesRepository } from "../repositories/articles.repository.js";
-import { NotFoundError } from "../models/errors/not-found.error.js";
-import { UnauthorizedError } from "../models/errors/unauthorized.error.js";
-import { CloudinaryService } from "../services/cloudinary.service.js";
 import type { Request, Response } from 'express';
 import { UpdateArticleDto } from "../models/dtos/update-article.dto.js";
 import { CreateArticleDto } from "../models/dtos/create-article.dto.js";
-import { prisma } from "../configuration/prisma.configuration.js";
-import { ForbiddenError } from "../models/errors/forbidden.error.js";
 import { PaginationParamsDto } from "../models/dtos/pagination-params.dto.js";
 import { OmitIdParamDto } from "../models/dtos/omit-id-param.dto.js";
-import { Role } from "../../prisma/generated/prisma/index.js";
+import { ArticlesService } from "../services/articles.service.js";
 
 export class ArticlesController {
-	static async getById(request: Request, response: Response) {
-		const { id } = UserIdParamDto.parse(request.params);
-		const article = await ArticlesRepository.findById(id)
+  static async findById(request: Request, response: Response) {
+    const { id } = UserIdParamDto.parse(request.params);
+    const article = await ArticlesService.getById(id)
 
-		if (!article) throw new NotFoundError("Artículo no encontrado");
+    return response.json(article)
+  }
 
-		return response.json(article)
-	}
+  static async delete(request: Request, response: Response) {
+    const { id } = UserIdParamDto.parse(request.params);
+    const success = await ArticlesService.delete(id)
 
-	static async delete(request: Request, response: Response) {
-		const { id } = UserIdParamDto.parse(request.params);
-		const article = await ArticlesRepository.findById(id)
+    return response.json(success)
+  }
 
-		if (!article) throw new NotFoundError("Artículo no encontrado");
+  static async update(request: Request, response: Response) {
+    const { id } = UserIdParamDto.parse(request.params);
+    const data = UpdateArticleDto.parse(request.body);
+    const success = await ArticlesService.update(id, data, request)
 
-		if (request.user?.id !== article.authorId) throw new UnauthorizedError("No podés eliminar artículos de otra persona");
+    return response.json(success);
+  }
 
-		await ArticlesRepository.delete(id)
+  static async create(request: Request, response: Response) {
+    const data = CreateArticleDto.parse(request.body);
+    const newArticle = await ArticlesService.create(data, request)
 
-		if (article.image) {
-			const publicId = CloudinaryService.extractIdOf(article.image);
+    return response.status(201).json(newArticle);
+  }
 
-			if (publicId) {
-				await CloudinaryService.delete(publicId);
-			}
-		}
+  static async getAll(request: Request, response: Response) {
+    const { limit, page } = PaginationParamsDto.parse(request.query);
+    const skip = (page - 1) * limit;
+    const articles = await ArticlesService.getAll(limit, skip)
 
-		return response.json({ value: "Artículo eliminado" })
-	}
+    return response.json(articles)
+  }
 
-	static async update(request: Request, response: Response) {
-		const { id } = UserIdParamDto.parse(request.params);
-		const article = await ArticlesRepository.findById(id);
+  static async getOwn(request: Request, response: Response) {
+    const { limit, page } = PaginationParamsDto.parse(request.query);
+    const skip = (page - 1) * limit;
+    const articles = await ArticlesService.getOwn(limit, skip, request.user.id)
 
-		if (!article) throw new NotFoundError("Artículo no encontrado");
+    return response.json(articles)
+  }
 
-		if (request.user?.id !== article.authorId) throw new UnauthorizedError("No se puede editar artículos de otros");
+  static async getRandom(request: Request, response: Response) {
+    const { omit } = OmitIdParamDto.parse(request.query);
+    const articles = await ArticlesService.getRandom(omit)
 
-		const { body, file } = request;
-
-		await CloudinaryService.updateImage({ file, body, article })
-
-		const data = UpdateArticleDto.parse(body);
-
-		await ArticlesRepository.update(id, data);
-
-		return response.json({ success: true });
-	}
-
-	static async create(request: Request, response: Response) {
-		if (request.user?.role !== Role.AUTHOR && request.user?.role !== Role.ADMIN) throw new ForbiddenError("No tenés acceso");
-
-		const { body, file } = request;
-		const data = CreateArticleDto.parse(body);
-
-		let image: string = "";
-
-		if (file) {
-			const uploadResult = await CloudinaryService.upload(file.buffer, file.originalname, "articles");
-			image = uploadResult.secure_url;
-		} else if (typeof data.image === "string") {
-			image = data.image;
-		}
-
-		const { image: _discard, ...rest } = data;
-
-		const article = await prisma.article.create({
-			data: {
-				...rest,
-				image,
-				authorId: request.user.id,
-			},
-		});
-
-		return response.status(201).json(article);
-	}
-
-	static async getAll(request: Request, response: Response) {
-		const { limit, page } = PaginationParamsDto.parse(request.query);
-		const skip = (page - 1) * limit;
-		const articles = await ArticlesRepository.getAll(limit, skip)
-
-		return response.json(articles)
-	}
-
-	static async getOwn(request: Request, response: Response) {
-		const { limit, page } = PaginationParamsDto.parse(request.query);
-		const skip = (page - 1) * limit;
-		const articles = await ArticlesRepository.getOwn(limit, skip, request.user.id)
-
-		return response.json(articles)
-	}
-
-	static async getRandom(request: Request, response: Response) {
-		const { omit } = OmitIdParamDto.parse(request.query);
-		const allArticleIds = await ArticlesRepository.getRandomIds(omit)
-		const shuffledIds = allArticleIds
-			.map((a) => a.id)
-			.sort(() => 0.5 - Math.random())
-			.slice(0, 4);
-		const articles = await ArticlesRepository.getByIds(shuffledIds)
-
-		return response.json(articles);
-	}
+    return response.json(articles);
+  }
 }

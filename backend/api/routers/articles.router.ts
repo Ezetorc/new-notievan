@@ -6,16 +6,16 @@ const upload = multer()
 
 export const ArticlesRouter = Router()
 
-ArticlesRouter.get("/own", authMiddleware, ArticlesController.getOwn)
+ArticlesRouter.get("/own", authMiddleware(), ArticlesController.getOwn)
 
 ArticlesRouter.get("/random", ArticlesController.getRandom)
 
-ArticlesRouter.get("/:id", ArticlesController.getById)
+ArticlesRouter.get("/:id", ArticlesController.findById)
 
 ArticlesRouter.get("/", ArticlesController.getAll)
 
-ArticlesRouter.delete("/:id", authMiddleware, ArticlesController.delete)
+ArticlesRouter.delete("/:id", authMiddleware("AUTHOR"), ArticlesController.delete)
 
-ArticlesRouter.patch("/:id", upload.single("image"), authMiddleware, ArticlesController.update)
+ArticlesRouter.patch("/:id", authMiddleware("AUTHOR"), upload.single("image"), ArticlesController.update)
 
-ArticlesRouter.post("/", authMiddleware, upload.single("image"), ArticlesController.create);
+ArticlesRouter.post("/", authMiddleware("AUTHOR"), upload.single("image"), ArticlesController.create);
