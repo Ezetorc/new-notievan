@@ -4,7 +4,6 @@ import { prisma } from "../configuration/prisma.configuration.js";
 import type { JWTUser } from "../models/jwt-user.model.js";
 import type { Request, Response, NextFunction } from "express";
 import type { Role } from "../../prisma/generated/prisma/index.js";
-import { UsersRepository } from "../repositories/users.repository.js";
 
 export function authMiddleware(role?: Role) {
   return async (
@@ -40,7 +39,7 @@ export function authMiddleware(role?: Role) {
       return response.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    if (role && user.role !== role || user.role !== "ADMIN") {
+    if (role && user.role !== role && user.role !== "ADMIN") {
       return response.status(403).json({ error: "Acceso denegado" });
     }
 

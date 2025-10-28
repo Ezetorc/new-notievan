@@ -2,6 +2,8 @@ import type { Dispatch, SetStateAction } from "react";
 import { useLocation } from "wouter";
 import { ArticlesService } from "../../../services/articles.service";
 import type { Article } from "../../../../../backend/prisma/generated/prisma";
+import { useQueryClient } from "@tanstack/react-query";
+import { ActionButton } from "../../../components/ActionButton";
 
 export function DeleteArticleModal({
   setIsModalOpen,
@@ -10,6 +12,7 @@ export function DeleteArticleModal({
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   article: Article;
 }) {
+  const queryClient = useQueryClient()
   const [, setLocation] = useLocation();
 
   const handleDelete = async () => {
@@ -17,6 +20,12 @@ export function DeleteArticleModal({
       await ArticlesService.delete(article.id);
 
       setLocation("/");
+
+      queryClient.invalidateQueries({ queryKey: ["article", article.id] });
+      queryClient.invalidateQueries({
+        predicate: ({ queryKey }) => Array.isArray(queryKey) && queryKey[0] === "articles",
+      });
+
     } catch (error) {
       console.error(error);
     }
@@ -36,12 +45,10 @@ export function DeleteArticleModal({
           >
             Cancelar
           </button>
-          <button
-            className="px-3 py-4 text-2xl bg-brand-red clickable rounded text-white font-bold"
-            onClick={handleDelete}
-          >
+
+          <ActionButton className="px-3 py-4 text-2xl text-white font-bold bg-brand-red" onClick={handleDelete}>
             Eliminar
-          </button>
+          </ActionButton>
         </div>
       </div>
     </div>

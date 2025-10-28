@@ -12,21 +12,27 @@ import { ArticlesService } from "../../../services/articles.service";
 import { getFormDataFrom } from "../../../utilities/get-form-data-from.utility";
 import { Loading } from "../../../components/Loading";
 import { useQueryClient } from "@tanstack/react-query";
+import { ActionButton } from "../../../components/ActionButton";
+import { useState } from "react";
 
 export default function EditArticlePage({ id }: { id: string }) {
   const { article, isLoading, isError } = useArticle(id)
   const [, setLocation] = useLocation();
+  const [isEditing, setIsEditing] = useState(false);
   const queryClient = useQueryClient();
 
-const onSuccess = async (data: EditArticleFormData) => {
-  const formData = getFormDataFrom(data);
-  await ArticlesService.update(formData, id);
+  const onSuccess = async (data: EditArticleFormData) => {
+    setIsEditing(true);
+    const formData = getFormDataFrom(data);
+    await ArticlesService.update(formData, id);
 
-  queryClient.invalidateQueries({ queryKey: ["article", id] });
+    queryClient.invalidateQueries({ queryKey: ["article", id] });
+    queryClient.invalidateQueries({
+      predicate: q => Array.isArray(q.queryKey) && q.queryKey[0] === "articles",
+    });
 
-  setLocation("/articulos/" + id);
-};
-
+    setLocation("/articulos/" + id);
+  };
 
   const { error, onSubmit, watch } = useForm(onSuccess, EditArticleSchema, {
     image: article?.image || "",
@@ -45,7 +51,6 @@ const onSuccess = async (data: EditArticleFormData) => {
       <DesktopOnlyMessage message="No puedes crear artículos desde el celular." />
 
       <form
-        onSubmit={onSubmit}
         className="hidden md:flex flex-col pb-[5vw] mt-[60px]"
       >
         <ArticleInput
@@ -79,12 +84,9 @@ const onSuccess = async (data: EditArticleFormData) => {
               value={article.content}
             />
 
-            <button
-              type="submit"
-              className="w-full h-[70px] clickable bg-brand-orange rounded-sm text-white text-3xl"
-            >
+            <ActionButton loading={isEditing} className="w-full text-white font-bold text-3xl h-[70px]" onClick={onSubmit}>
               Editar artículo
-            </button>
+            </ActionButton>
           </div>
 
           <aside className="flex flex-col gap-y-5">

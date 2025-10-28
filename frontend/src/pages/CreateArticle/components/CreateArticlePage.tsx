@@ -11,13 +11,24 @@ import {
 import { useForm } from "../../../hooks/use-form.hook";
 import { ArticlesService } from "../../../services/articles.service";
 import { getFormDataFrom } from "../../../utilities/get-form-data-from.utility";
+import { useQueryClient } from "@tanstack/react-query";
+import { ActionButton } from "../../../components/ActionButton";
+import { useState } from "react";
 
 export default function CreateArticlePage() {
   const [, setLocation] = useLocation();
+  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSuccess = async (data: CreateArticleFormData) => {
+    setIsLoading(true);
     const formData = getFormDataFrom(data)
     const newArticle = await ArticlesService.create(formData);
+
+    queryClient.invalidateQueries({ queryKey: ["article", newArticle.id] });
+    queryClient.invalidateQueries({
+      predicate: q => Array.isArray(q.queryKey) && q.queryKey[0] === "articles",
+    });
 
     setLocation("/articulos/" + newArticle.id);
   };
@@ -35,7 +46,6 @@ export default function CreateArticlePage() {
       <DesktopOnlyMessage message="No puedes crear artículos desde el celular." />
 
       <form
-        onSubmit={onSubmit}
         className="hidden md:flex flex-col pb-[5vw] mt-[60px]"
       >
         <ArticleInput
@@ -65,12 +75,9 @@ export default function CreateArticlePage() {
               placeholder="Contenido de tu artículo..."
             />
 
-            <button
-              type="submit"
-              className="w-full h-[70px] clickable bg-brand-orange rounded-sm text-white text-3xl"
-            >
+            <ActionButton className="w-full text-white font-bold text-3xl h-[70px]" loading={isLoading} onClick={onSubmit}>
               Crear artículo
-            </button>
+            </ActionButton>
           </div>
 
           <aside className="flex flex-col gap-y-5">

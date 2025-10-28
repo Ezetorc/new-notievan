@@ -26,7 +26,6 @@ export default function App() {
     } else {
       SessionService.delete();
     }
-
   }, [])
 
   return (
