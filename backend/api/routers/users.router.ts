@@ -8,4 +8,4 @@ UsersRouter.get("/", authMiddleware("ADMIN"), UsersController.getAll)
 
 UsersRouter.patch("/:id/role", authMiddleware("ADMIN"), UsersController.updateRole)
 
-UsersRouter.get("/:id/name", authMiddleware(), UsersController.getNameById)
+UsersRouter.get("/:id/name", UsersController.getNameById)
