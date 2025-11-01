@@ -3,9 +3,11 @@ import { useState } from "react";
 import { UsersService } from "../../../services/users.service";
 import type { Role } from "../../../models/role.model";
 import type { SanitizedUser } from "../../../models/sanitized-user.model";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function UserDisplay({ user }: { user: SanitizedUser }) {
   const [newRole, setNewRole] = useState<Role>(user.role);
+  const queryClient = useQueryClient()
 
   const onSelectNewRole = (event: ChangeEvent<HTMLSelectElement>) => {
     const newRole = event.target.value as Role;
@@ -17,8 +19,8 @@ export function UserDisplay({ user }: { user: SanitizedUser }) {
 
     try {
       await UsersService.updateRole(user.id, newRole);
-      window.location.reload();
 
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     } catch (error) {
       console.error(error);
       alert("Error actualizando rol")
