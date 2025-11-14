@@ -1,11 +1,12 @@
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import { ActionButton } from '../../../components/ActionButton'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query'
 import { CommentsService } from '../../../services/comments.service'
 import { Modal } from '../../../components/Modal'
 import { ErrorMessage } from '../../../components/ErrorMessage'
 import { useForm } from '../../../hooks/use-form.hook'
 import { z } from 'zod'
+import type { Comment } from '../../../../../backend/prisma/generated/prisma'
 
 const CreateCommentSchema = z.object({
   content: z
@@ -26,16 +27,33 @@ export function CreateCommentModal({
 }) {
   const queryClient = useQueryClient()
   const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState<string>("")
 
   const onSuccess = async (data: CreateCommentFormData) => {
-    setLoading(true)
-    await CommentsService.create(data)
-    queryClient.invalidateQueries({ queryKey: ['comments', articleId] })
-    setIsModalOpen(false)
-    setLoading(false)
+    try {
+      setLoading(true)
+      const comment = await CommentsService.create(data)
+      queryClient.setQueryData(['comments', articleId], (prevComments: InfiniteData<Comment[]>) => {
+        if (!prevComments) return prevComments
+
+        return {
+          ...prevComments,
+          pages: [...prevComments.pages, [comment]]
+        }
+      })
+      setIsModalOpen(false)
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError("Error creando el comentario")
+      }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const { error, onSubmit, watch } = useForm(onSuccess, CreateCommentSchema, {
+  const { error: schemaError, onSubmit, watch } = useForm(onSuccess, CreateCommentSchema, {
     content: '',
     articleId
   })
@@ -64,6 +82,7 @@ export function CreateCommentModal({
         />
 
         {error && <ErrorMessage>{error}</ErrorMessage>}
+        {schemaError && <ErrorMessage>{schemaError}</ErrorMessage>}
 
         <ActionButton
           onClick={onSubmit}
