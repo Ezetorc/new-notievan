@@ -73,7 +73,6 @@ export default function CreateArticlePage() {
             <MarkdownEditor
               onChange={(value) => watch('content', value)}
               placeholder='Contenido de tu artículo...'
-              className='min-h-[300px] tablet:min-h-[400px]'
             />
 
             {error && <ErrorMessage>{error}</ErrorMessage>}

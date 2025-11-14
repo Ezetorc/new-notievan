@@ -85,7 +85,6 @@ export default function EditArticlePage({ id }: { id: string }) {
               onChange={(value) => watch('content', value)}
               placeholder='Contenido de tu artículo...'
               value={article.content}
-              className='min-h-[300px] tablet:min-h-[400px]'
             />
           </div>
 
