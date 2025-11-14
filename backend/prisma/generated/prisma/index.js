@@ -194,7 +194,7 @@ const config = {
   },
   "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/prisma\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Article {\n  id          String   @id @default(cuid())\n  title       String\n  subtitle    String\n  description String\n  content     String\n  createdAt   DateTime @default(now())\n  authorId    String\n  image       String\n\n  comments Comment[] @relation(\"ArticleComments\")\n  author   User      @relation(\"UserArticles\", fields: [authorId], references: [id], onDelete: Cascade)\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  name      String   @unique\n  email     String   @unique\n  password  String\n  createdAt DateTime @default(now())\n  role      Role     @default(USER)\n\n  articles Article[] @relation(\"UserArticles\")\n  comments Comment[] @relation(\"UserComments\")\n}\n\nmodel Comment {\n  id        String   @id @default(cuid())\n  createdAt DateTime @default(now())\n  content   String\n  articleId String\n  authorId  String\n\n  article Article @relation(\"ArticleComments\", fields: [articleId], references: [id], onDelete: Cascade)\n  author  User    @relation(\"UserComments\", fields: [authorId], references: [id], onDelete: Cascade)\n}\n\nenum Role {\n  USER\n  AUTHOR\n  ADMIN\n}\n",
   "inlineSchemaHash": "ed798dd08696775afd7f34b73717647c1a2f6f150f45b531d3809c4513d87858",
-  "copyEngine": false
+  "copyEngine": true
 }
 
 const fs = require('fs')
@@ -231,3 +231,13 @@ const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "prisma/generated/prisma/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "prisma/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node")
+// file annotations for bundling tools to include these files
+path.join(__dirname, "schema.prisma");
+path.join(process.cwd(), "prisma/generated/prisma/schema.prisma")
