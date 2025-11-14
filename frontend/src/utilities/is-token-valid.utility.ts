@@ -1,15 +1,15 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode'
 
 export function isTokenValid(token: string): boolean {
-  try {
-    const decoded: { exp?: number } = jwtDecode(token);
+	try {
+		const decoded: { exp?: number } = jwtDecode(token)
 
-    if (!decoded.exp) return true;
+		if (!decoded.exp) return true
 
-    const now = Date.now() / 1000;
+		const now = Date.now() / 1000
 
-    return decoded.exp > now;
-  } catch {
-    return true;
-  }
+		return decoded.exp > now
+	} catch {
+		return true
+	}
 }

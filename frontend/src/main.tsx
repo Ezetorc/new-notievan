@@ -7,12 +7,16 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client'
 import { queryClient } from './configuration/query-client.configuration.ts'
 import { persister } from './configuration/storage-persister.configuration.ts'
 
+const rootElement = document.getElementById('root')
+
+if (!rootElement) throw new Error('Root element not found')
+
 persistQueryClient({ queryClient, persister })
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
-  </StrictMode>,
+createRoot(rootElement).render(
+	<StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<App />
+		</QueryClientProvider>
+	</StrictMode>
 )

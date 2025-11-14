@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
-import { marked } from "marked";
-import DOMPurify from "dompurify";
+import { useEffect, useState } from 'react'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 
 export function useParsedMarkdown(markdown: string | undefined) {
-  const [html, setHtml] = useState<string>("");
+	const [html, setHtml] = useState<string>('')
 
-  useEffect(() => {
-    const handleHtml = async () => {
-      if (!markdown) {
-        setHtml("");
-        return;
-      }
+	useEffect(() => {
+		const handleHtml = async () => {
+			if (!markdown) {
+				setHtml('')
+				return
+			}
 
-      const rawHtml = await marked.parse(markdown);
-      const sanitizedHtml = DOMPurify.sanitize(rawHtml);
+			const rawHtml = await marked.parse(markdown)
+			const sanitizedHtml = DOMPurify.sanitize(rawHtml)
 
-      setHtml(sanitizedHtml);
-    }
+			setHtml(sanitizedHtml)
+		}
 
-    handleHtml()
-  }, [markdown]);
+		handleHtml()
+	}, [markdown])
 
-  return html;
+	return html
 }

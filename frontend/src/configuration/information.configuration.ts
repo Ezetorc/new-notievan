@@ -1,1 +1,1 @@
-export const INSTAGRAM = "https://www.instagram.com/noti.evan"
+export const INSTAGRAM = 'https://www.instagram.com/noti.evan'

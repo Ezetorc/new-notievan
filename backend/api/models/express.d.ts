@@ -1,11 +1,11 @@
-import { UserRole } from "@prisma/client";
-import { JWTUser } from "./jwt-user.model.ts";
-import "express";
+import { UserRole } from '@prisma/client'
+import { JWTUser } from './jwt-user.model.ts'
+import 'express'
 
 declare global {
-  namespace Express {
-    interface Request {
-      user: JWTUser;
-    }
-  }
+	namespace Express {
+		interface Request {
+			user: JWTUser
+		}
+	}
 }

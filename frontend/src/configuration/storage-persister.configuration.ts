@@ -1,5 +1,5 @@
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 
 export const persister = createAsyncStoragePersister({
-  storage: window.localStorage,
+	storage: window.localStorage
 })

@@ -10,14 +10,15 @@ datasource db {
 }
 
 model Article {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   subtitle    String
   description String
   content     String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   authorId    String
   image       String
+  comments    Comment[]
 
   author User @relation(fields: [authorId], references: [id])
 }
@@ -30,6 +31,18 @@ model User {
   createdAt DateTime  @default(now())
   role      Role      @default(USER)
   articles  Article[]
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  content   String
+  articleId String
+  authorId  String
+
+  article Article @relation(fields: [articleId], references: [id])
+  author  User    @relation(fields: [authorId], references: [id])
 }
 
 enum Role {
