@@ -4,7 +4,8 @@ import { usePaginatedArticles } from '../../../hooks/use-paginated-articles.hook
 export function AsideArticles({ excludeId }: { excludeId: string }) {
   const { articles, loading } = usePaginatedArticles({
     type: 'random',
-    excludeId
+    excludeId,
+    limit: 2
   })
 
   if (loading || !articles.length) {

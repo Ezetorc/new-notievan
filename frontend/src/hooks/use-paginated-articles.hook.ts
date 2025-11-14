@@ -13,7 +13,7 @@ export function usePaginatedArticles({
   type = 'all',
   excludeId,
   initialPage = 1,
-  limit = 2
+  limit = 4
 }: usePaginatedArticlesOptions) {
   const query = useInfiniteQuery({
     queryKey: excludeId ? ['articles', type, excludeId] : ['articles', type],
