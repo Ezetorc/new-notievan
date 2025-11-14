@@ -24,7 +24,7 @@ export class ArticlesRepository {
       select: {
         authorId: true,
         content: false,
-        createdAt: false,
+        createdAt: true,
         description: true,
         id: true,
         subtitle: true,
@@ -43,7 +43,7 @@ export class ArticlesRepository {
       select: {
         authorId: true,
         content: false,
-        createdAt: false,
+        createdAt: true,
         description: true,
         id: true,
         subtitle: true,

@@ -8,7 +8,6 @@ interface MarkdownEditorProps {
   autofocus?: boolean
   onChange?: (value: string) => void
   minHeight?: string
-  className?: string
 }
 
 export function MarkdownEditor({
@@ -16,8 +15,7 @@ export function MarkdownEditor({
   placeholder = 'Escribí algo...',
   autofocus = false,
   onChange,
-  minHeight = '500px',
-  className = ''
+  minHeight = '500px'
 }: MarkdownEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const editorRef = useRef<EasyMDE | null>(null)
@@ -73,5 +71,5 @@ export function MarkdownEditor({
     }
   }, [value])
 
-  return <textarea ref={textareaRef} className={className} />
+  return <textarea maxLength={5000} minLength={1} ref={textareaRef} />
 }
