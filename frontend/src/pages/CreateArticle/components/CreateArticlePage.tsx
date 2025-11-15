@@ -67,7 +67,7 @@ export default function CreateArticlePage() {
         onChange={(value) => watch('description', value)}
       />
 
-      <div className='flex flex-col tablet:grid gap-6 tablet:gap-x-10 w-full tablet:grid-cols-[1fr] desktop:grid-cols-[2fr_1fr]'>
+      <div className='flex flex-col tablet:grid gap-6 tablet:gap-x-10 w-full tablet:grid-cols-[1fr] desktop:grid-cols-[3fr_1fr]'>
         <div className='flex flex-col gap-y-4 tablet:gap-y-6 max-w-full order-2 tablet:order-1'>
           <MarkdownEditor
             onChange={(value) => watch('content', value)}

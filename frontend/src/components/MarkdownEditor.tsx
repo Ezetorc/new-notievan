@@ -15,7 +15,7 @@ export function MarkdownEditor({
   placeholder = 'Escribí algo...',
   autofocus = false,
   onChange,
-  minHeight = '500px'
+  minHeight = '520px'
 }: MarkdownEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const editorRef = useRef<EasyMDE | null>(null)
@@ -29,6 +29,7 @@ export function MarkdownEditor({
       placeholder,
       spellChecker: false,
       autofocus,
+      status: false,
       minHeight,
       toolbar: [
         'preview',
