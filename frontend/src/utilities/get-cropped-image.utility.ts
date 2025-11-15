@@ -28,13 +28,15 @@ export async function getCroppedImage(
     canvas.height
   )
 
-  return new Promise(resolve => {
-    canvas.toBlob(blob => {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
       if (blob) {
         const file = new File([blob], String(fileName) || 'cropped-image', {
           type: 'image/webp'
         })
         resolve(file)
+      } else {
+        reject("Error al obtener el blob")
       }
     }, 'image/webp')
   })

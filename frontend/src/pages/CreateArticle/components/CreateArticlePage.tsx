@@ -18,6 +18,7 @@ export default function CreateArticlePage() {
   const [, setLocation] = useLocation()
   const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(true)
 
   const onSuccess = async (data: CreateArticleFormData) => {
     setIsLoading(true)
@@ -41,8 +42,26 @@ export default function CreateArticlePage() {
     subtitle: ''
   })
 
+  // const onImageSelected = (value: string | File) => {
+  //   watch('image', value)
+
+  //   if (value instanceof File) {
+  //     setIsModalOpen(true)
+  //   }
+  // }
+
   return (
     <>
+      {/* {
+        isModalOpen && data.image instanceof File && <ImageCropperModal
+          image={data.image}
+          onComplete={(croppedImage) => {
+            watch('image', croppedImage)
+            setIsModalOpen(false)
+          }}
+        />
+      } */}
+
       <form className='flex flex-col pb-[5vw] mobile:mt-[20px] tablet:mt-[60px]'>
         <ArticleInput
           placeholder='Subtítulo de tu artículo...'
@@ -79,7 +98,7 @@ export default function CreateArticlePage() {
           </div>
 
           <aside className='flex flex-col gap-y-5 order-1 md:order-2'>
-            <ImageInput onImageSelected={(value) => watch('image', value)} />
+            <ImageInput onImageSelected={(value) => watch("image", value)} />
           </aside>
 
           <div className='w-full order-3'>
