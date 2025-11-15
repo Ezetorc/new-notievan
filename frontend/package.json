@@ -25,6 +25,7 @@
 		"jwt-decode": "^4.0.0",
 		"marked": "^16.4.1",
 		"react": "^19.1.1",
+		"react-cropper": "^2.3.3",
 		"react-dom": "^19.1.1",
 		"react-easy-crop": "^5.5.3",
 		"tailwindcss": "^4.1.16",
