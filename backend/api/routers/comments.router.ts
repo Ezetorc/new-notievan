@@ -6,6 +6,6 @@ export const CommentsRouter = Router()
 
 CommentsRouter.get('/article/:id', CommentsController.getAll)
 
-CommentsRouter.post('/', authMiddleware('USER'), CommentsController.create)
+CommentsRouter.post('/', authMiddleware(), CommentsController.create)
 
-CommentsRouter.delete('/:id', authMiddleware('USER'), CommentsController.delete)
+CommentsRouter.delete('/:id', authMiddleware(), CommentsController.delete)
