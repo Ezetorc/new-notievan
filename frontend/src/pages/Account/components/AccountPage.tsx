@@ -11,20 +11,17 @@ import { useState } from 'react'
 export default function AccountPage() {
   const { user, logout } = useSession()
   const queryClient = useQueryClient()
-  const [error, setError] = useState<string>("")
+  const [error, setError] = useState<string>('')
 
   if (!user) return
 
   const handleEditName = async (newValue: string) => {
-    if (newValue === user.name.trim()) {
-      setError('El nombre de usuario no puede ser el mismo que el actual')
-      return false
-    }
+    if (newValue === user.name.trim()) return true
 
     try {
       await UsersService.update(user.id, { name: newValue })
       queryClient.setQueryData(['self-user'], { ...user, name: newValue })
-      setError("")
+      setError('')
       return true
     } catch (error) {
       if (error instanceof Error) {
@@ -41,7 +38,14 @@ export default function AccountPage() {
 
       <article className='flex flex-col gap-y-16'>
         <div className='flex flex-col gap-y-6 text-lg'>
-          <EditableUserInfo name='Nombre de usuario' value={user.name} onEdit={handleEditName} error={error} minLength={3} maxLength={50} />
+          <EditableUserInfo
+            name='Nombre de usuario'
+            value={user.name}
+            onEdit={handleEditName}
+            error={error}
+            minLength={3}
+            maxLength={50}
+          />
           <UserInfo name='Email' value={user.email} />
           <UserInfo
             name='Fecha de creación'

@@ -3,7 +3,7 @@ import { UsersService } from '../services/users.service'
 
 export function useUserName(authorId?: string) {
   const { data: name = '' } = useQuery({
-    queryKey: ['authorName', authorId],
+    queryKey: ['userName', authorId],
     queryFn: () => {
       if (!authorId) throw new Error('No authorId provided')
       return UsersService.getNameOfUser(authorId)

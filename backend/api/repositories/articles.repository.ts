@@ -55,10 +55,11 @@ export class ArticlesRepository {
     })
   }
 
-  static async getRandomIds(omit: string) {
+  static async getRandomIds(limit: number, omit: string) {
     return await prisma.article.findMany({
       where: omit ? { id: { not: omit } } : {},
-      select: { id: true }
+      select: { id: true },
+      take: limit
     })
   }
 

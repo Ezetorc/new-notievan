@@ -16,13 +16,15 @@ export function usePaginatedArticles({
   limit = 4
 }: usePaginatedArticlesOptions) {
   const query = useInfiniteQuery({
-    queryKey: excludeId ? ['articles', type, excludeId] : ['articles', type],
+    queryKey: excludeId
+      ? ['articles', type, limit, initialPage, excludeId]
+      : ['articles', type, limit, initialPage],
     queryFn: async ({ pageParam = initialPage }): Promise<Article[]> => {
       switch (type) {
         case 'own':
           return ArticlesService.getOwn({ page: pageParam, limit })
         case 'random':
-          if (excludeId) return ArticlesService.getRandom(excludeId)
+          if (excludeId) return ArticlesService.getRandom({ omitId: excludeId, limit })
           return []
         default:
           return ArticlesService.getAll({ page: pageParam, limit })
@@ -30,7 +32,7 @@ export function usePaginatedArticles({
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length < limit) return undefined
-      return allPages.length + initialPage
+      return allPages.length + 1
     },
     initialPageParam: initialPage
   })

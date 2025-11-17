@@ -1,4 +1,3 @@
-import { UserRole } from '@prisma/client'
 import { JWTUser } from './jwt-user.model.ts'
 import 'express'
 

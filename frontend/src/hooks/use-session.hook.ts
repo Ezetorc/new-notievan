@@ -4,13 +4,13 @@ import type { SignUpFormData } from '../pages/SignUp/models/sign-up-form-data.mo
 import { AuthService } from '../services/auth.service'
 import { SessionService } from '../services/session.service'
 import { useSessionStore } from '../stores/session.store'
-import { useSelfUser } from './use-self-user.hook'
 import { useLocation } from 'wouter'
 import { useQueryClient } from '@tanstack/react-query'
+import { useUser } from './use-user.hook'
 
 export function useSession() {
   const { user, setUser } = useSessionStore()
-  const { user: selfUser, refetch: refetchSelf } = useSelfUser()
+  const { user: selfUser, refetch: refetchSelf } = useUser(user?.id)
   const [, setLocation] = useLocation()
   const queryClient = useQueryClient()
 

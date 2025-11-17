@@ -27,6 +27,29 @@ export class UsersService {
     }
   }
 
+  static async getById(id: string): Promise<SanitizedUser> {
+    try {
+      const response = await axios.get<SanitizedUser>(
+        `${UsersService.API_BASE}/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${SessionService.token}`
+          }
+        }
+      )
+
+      return response.data
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const message =
+          error.response?.data?.error || 'Error obteniendo usuario'
+        throw new Error(message)
+      }
+
+      throw new Error('Error inesperado')
+    }
+  }
+
   static async updateRole(id: string, role: Role): Promise<void> {
     try {
       await axios.patch(
@@ -51,15 +74,11 @@ export class UsersService {
 
   static async update(id: string, data: { name: string }) {
     try {
-      await axios.patch(
-        `${UsersService.API_BASE}/${id}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${SessionService.token}`
-          }
+      await axios.patch(`${UsersService.API_BASE}/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${SessionService.token}`
         }
-      )
+      })
     } catch (error) {
       if (error instanceof AxiosError) {
         const message =

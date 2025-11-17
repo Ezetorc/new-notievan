@@ -15,6 +15,21 @@ export class UsersController {
     return response.json(name)
   }
 
+  static async getById(request: Request, response: Response) {
+    const { id } = CUIDParamDto.parse(request.params)
+
+    if (request.user.id !== id) {
+      throw new UnauthorizedError(
+        'No tienes permiso para obtener este usuario'
+      )
+    }
+
+    const user = await UsersService.getById(id)
+    const sanitizedUser = new SanitizedUser(user)
+
+    return response.json(sanitizedUser)
+  }
+
   static async updateRole(request: Request, response: Response) {
     const { id } = CUIDParamDto.parse(request.params)
     const { role } = RoleParamDto.parse(request.body)
@@ -36,7 +51,9 @@ export class UsersController {
     const { id } = CUIDParamDto.parse(request.params)
 
     if (request.user.id !== id) {
-      throw new UnauthorizedError("No tienes permiso para actualizar este usuario")
+      throw new UnauthorizedError(
+        'No tienes permiso para actualizar este usuario'
+      )
     }
 
     const data = UpdateUserDto.parse(request.body)

@@ -5,7 +5,8 @@ import { usePaginatedArticles } from '../../../hooks/use-paginated-articles.hook
 export function SecondaryArticles() {
   const { articles, hasMore, loadMore, loading } = usePaginatedArticles({
     type: 'all',
-    initialPage: 2
+    initialPage: 2,
+    limit: 4
   })
 
   if (articles.length === 0) return null
