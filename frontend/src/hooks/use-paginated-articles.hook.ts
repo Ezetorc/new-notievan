@@ -19,20 +19,21 @@ export function usePaginatedArticles({
     queryKey: excludeId
       ? ['articles', type, limit, initialPage, excludeId]
       : ['articles', type, limit, initialPage],
-    queryFn: async ({ pageParam = initialPage }): Promise<Article[]> => {
+    queryFn: async ({ pageParam }): Promise<Article[]> => {
+      const page = pageParam !== undefined ? pageParam : initialPage;
       switch (type) {
         case 'own':
-          return ArticlesService.getOwn({ page: pageParam, limit })
+          return ArticlesService.getOwn({ page, limit });
         case 'random':
-          if (excludeId) return ArticlesService.getRandom({ omitId: excludeId, limit })
-          return []
+          if (excludeId) return ArticlesService.getRandom({ omitId: excludeId, limit });
+          return [];
         default:
-          return ArticlesService.getAll({ page: pageParam, limit })
+          return ArticlesService.getAll({ page, limit });
       }
     },
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < limit) return undefined
-      return allPages.length + 1
+      if (lastPage.length < limit) return undefined;
+      return allPages.length + initialPage;
     },
     initialPageParam: initialPage
   })
