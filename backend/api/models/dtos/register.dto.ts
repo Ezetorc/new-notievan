@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import * as z from 'zod'
 
 export const RegisterDto = z.object({
   email: z.email().min(6, 'El email debe tener al menos 6 caracteres').max(100, 'El email debe tener menos de 100 caracteres'),
