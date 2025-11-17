@@ -3,7 +3,6 @@ import { env } from '../configuration/env.configuration'
 import { SessionService } from './session.service'
 import type { Role } from '../models/role.model'
 import type { SanitizedUser } from '../models/sanitized-user.model'
-import type { UpdateUserDtoType } from '../../../backend/api/models/dtos/update-user.dto'
 
 export class UsersService {
   private static API_BASE = `${env.baseUrl}/users`
@@ -50,7 +49,7 @@ export class UsersService {
     }
   }
 
-  static async update(id: string, data: UpdateUserDtoType) {
+  static async update(id: string, data: { name: string }) {
     try {
       await axios.patch(
         `${UsersService.API_BASE}/${id}`,
