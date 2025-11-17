@@ -7,9 +7,11 @@ export const UsersRouter = Router()
 UsersRouter.get('/', authMiddleware('ADMIN'), UsersController.getAll)
 
 UsersRouter.patch(
-	'/:id/role',
-	authMiddleware('ADMIN'),
-	UsersController.updateRole
+  '/:id/role',
+  authMiddleware('ADMIN'),
+  UsersController.updateRole
 )
 
 UsersRouter.get('/:id/name', UsersController.getNameById)
+
+UsersRouter.patch("/:id", authMiddleware(), UsersController.update)

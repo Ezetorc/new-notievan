@@ -1,20 +1,13 @@
+import { Article } from '../../../components/Article'
 import { useArticles } from '../../../hooks/use-articles.hook'
-import { MainArticle } from './MainArticle'
 
 export function MainArticles() {
-	const { articles } = useArticles()
+  const { articles } = useArticles({ limit: 4 })
 
-	return (
-		<main
-			className='w-full min-h-[650px] grid
-         mobile:grid-rows-4 mobile:grid-cols-1
-         desktop:grid-rows-1 desktop:grid-cols-4
-         gap-8'
-		>
-			<MainArticle article={articles[0]} />
-			<MainArticle article={articles[1]} />
-			<MainArticle article={articles[2]} />
-			<MainArticle article={articles[3]} />
-		</main>
-	)
+  return (
+    <main className='w-full grid grid-cols-[repeat(auto-fit,minmax(290px,1fr))] gap-4'
+    >
+      {articles.map(article => <Article key={article.id} article={article} />)}
+    </main>
+  )
 }

@@ -71,7 +71,7 @@ export function ImageInput({
             htmlFor='image-input'
             className='cursor-pointer flex flex-col gap-y-2'
           >
-            <div className='h-full max-w-[300px] aspect-9/16 bg-gray-200'>
+            <div className='max-h-[400px] max-w-[300px] aspect-9/16 bg-gray-200'>
               {image && typeof image === 'string' ? (
                 <img
                   src={image}
@@ -107,8 +107,8 @@ export function ImageInput({
         </main>
       )}
 
-      <footer className='text-sm text-gray-500 text-center'>
-        La imagen se recortará para ajustarse a la relación de aspecto 9:16
+      <footer className='text-sm text-gray-700 text-center'>
+        Se recomienda usar imágenes de 1200 pixeles de ancho y 675 pixeles de alto <strong>(1200x675)</strong>
       </footer>
     </div>
   )

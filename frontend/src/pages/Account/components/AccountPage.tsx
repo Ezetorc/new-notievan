@@ -1,13 +1,39 @@
 import { Hero } from '../../../components/Hero'
 import { getDisplayableDate } from '../utilities/get-displayable-date.utility'
 import { AccountArticles } from './AccountArticles'
-import { UserInfo } from './UserInfo'
+import { EditableUserInfo } from './EditableUserInfo'
 import { useSession } from '../../../hooks/use-session.hook'
+import { UsersService } from '../../../services/users.service'
+import { useQueryClient } from '@tanstack/react-query'
+import { UserInfo } from './UserInfo'
+import { useState } from 'react'
 
 export default function AccountPage() {
   const { user, logout } = useSession()
+  const queryClient = useQueryClient()
+  const [error, setError] = useState<string>("")
 
   if (!user) return
+
+  const handleEditName = async (newValue: string) => {
+    if (newValue === user.name.trim()) {
+      setError('El nombre de usuario no puede ser el mismo que el actual')
+      return false
+    }
+
+    try {
+      await UsersService.update(user.id, { name: newValue })
+      queryClient.setQueryData(['self-user'], { ...user, name: newValue })
+      setError("")
+      return true
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+      }
+
+      return false
+    }
+  }
 
   return (
     <>
@@ -15,7 +41,7 @@ export default function AccountPage() {
 
       <article className='flex flex-col gap-y-16'>
         <div className='flex flex-col gap-y-6 text-lg'>
-          <UserInfo name='Nombre de usuario' value={user.name} />
+          <EditableUserInfo name='Nombre de usuario' value={user.name} onEdit={handleEditName} error={error} minLength={3} maxLength={50} />
           <UserInfo name='Email' value={user.email} />
           <UserInfo
             name='Fecha de creación'

@@ -1,4 +1,4 @@
-import { SecondaryArticle } from '../../../components/SecondaryArticle'
+import { Article } from '../../../components/Article'
 import { usePaginatedArticles } from '../../../hooks/use-paginated-articles.hook'
 
 export function AsideArticles({ excludeId }: { excludeId: string }) {
@@ -11,8 +11,8 @@ export function AsideArticles({ excludeId }: { excludeId: string }) {
   if (loading || !articles.length) {
     return (
       <aside className='flex flex-col gap-y-5'>
-        <SecondaryArticle />
-        <SecondaryArticle />
+        <Article />
+        <Article />
       </aside>
     )
   }
@@ -20,7 +20,7 @@ export function AsideArticles({ excludeId }: { excludeId: string }) {
   return (
     <aside className='flex flex-col gap-y-5'>
       {articles.map((article) => (
-        <SecondaryArticle key={article.id} article={article} />
+        <Article key={article.id} article={article} />
       ))}
     </aside>
   )
