@@ -23,7 +23,7 @@ export function Article({ article }: { article?: ArticleData }) {
       href={`/articulos/${article.id}`}
       className="group clickable block w-full max-w-[400px] mx-auto overflow-hidden"
     >
-      <div className="relative w-full aspect-9/16 bg-gray-100 rounded-[4px] overflow-hidden">
+      <div className="relative w-full aspect-video bg-gray-100 rounded-[4px] overflow-hidden">
         {isRecent(article.createdAt) && (
           <div className='absolute top-3 left-3 bg-brand-red text-white text-sm font-bold px-3 py-1 rounded-sm z-10'>
             NUEVO

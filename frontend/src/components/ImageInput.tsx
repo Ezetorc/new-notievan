@@ -71,7 +71,7 @@ export function ImageInput({
             htmlFor='image-input'
             className='cursor-pointer flex flex-col gap-y-2'
           >
-            <div className='max-h-[400px] max-w-[300px] aspect-9/16 bg-gray-200'>
+            <div className='max-h-[400px] max-w-[300px] aspect-video bg-gray-200'>
               {image && typeof image === 'string' ? (
                 <img
                   src={image}
@@ -101,7 +101,7 @@ export function ImageInput({
             <img
               src={image}
               alt='Vista previa'
-              className='w-full aspect-video rounded-md object-cover border border-gray-300'
+              className='w-full max-h-[400px] max-w-[300px] aspect-video rounded-md object-cover border border-gray-300'
             />
           )}
         </main>
