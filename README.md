@@ -1,6 +1,6 @@
 # NotiEvan
 
-NotiEvan is a school newspaper for the Evan community. It’s a simple way to share news, stories, and updates about what’s happening at Evan.
+NotiEvan is a school newspaper for my school. It’s a simple way to share news, stories, and updates about what’s happening.
 
 ## What it does
 
@@ -8,6 +8,7 @@ NotiEvan is a school newspaper for the Evan community. It’s a simple way to sh
 - Highlight recent updates and random picks.
 - Give authors tools to write, edit, and manage their posts.
 - Keep the experience safe and friendly for all readers.
+- Comment and share your opinion of articles.
 
 ## Project structure
 

@@ -1,78 +1,47 @@
-import axios, { AxiosError } from 'axios'
 import type { Comment } from '../../../backend/prisma/generated/prisma'
-import { SessionService } from './session.service'
-import { env } from '../configuration/env.configuration'
+import { HttpClient } from '../models/http-client.model'
+
+type CreateCommentData = {
+  articleId: string
+  content: string
+}
+
+type GetAllOfArticleParams = {
+  page?: number
+  limit?: number
+  articleId: string
+}
 
 export class CommentsService {
-	private static API_BASE = `${env.baseUrl}/comments`
+  private static readonly API_BASE = '/comments'
 
-	static async create({
-		articleId,
-		content
-	}: {
-		articleId: string
-		content: string
-	}): Promise<Comment> {
-		try {
-			const token = SessionService.token
-			const response = await axios.post<Comment>(
-				CommentsService.API_BASE,
-				{
-					articleId,
-					content
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
-				}
-			)
+  static async create({ articleId, content }: CreateCommentData): Promise<Comment> {
+    const response = await HttpClient.post<Comment>(
+      this.API_BASE,
+      { articleId, content }
+    )
 
-			return response.data
-		} catch (error) {
-			if (error instanceof AxiosError) {
-				const message =
-					error.response?.data?.error || 'Error al crear comentario'
-				throw new Error(message)
-			}
+    if (response.error) {
+      throw new Error(response.error || 'Error al crear comentario')
+    }
 
-			throw new Error('Error inesperado')
-		}
-	}
+    return response.data!
+  }
 
-	static async delete(id: string): Promise<boolean> {
-		try {
-			const token = SessionService.token
+  static async delete(id: string): Promise<boolean> {
+    const response = await HttpClient.delete<{ success: boolean }>(`${this.API_BASE}/${id}`)
+    return !response.error
+  }
 
-			await axios.delete(`${CommentsService.API_BASE}/${id}`, {
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			})
+  static async getAllOfArticle({
+    page = 1,
+    limit = 4,
+    articleId
+  }: GetAllOfArticleParams): Promise<Comment[]> {
+    const response = await HttpClient.get<Comment[]>(
+      `${this.API_BASE}/article/${articleId}?page=${page}&limit=${limit}`
+    )
 
-			return true
-		} catch {
-			return false
-		}
-	}
-
-	static async getAllOfArticle({
-		page = 1,
-		limit = 4,
-		articleId
-	}: {
-		page?: number
-		limit?: number
-		articleId: string
-	}): Promise<Comment[]> {
-		try {
-			const response = await axios.get(
-				`${CommentsService.API_BASE}/article/${articleId}?page=${page}&limit=${limit}`
-			)
-
-			return response.data
-		} catch {
-			return []
-		}
-	}
+    return response.data ?? []
+  }
 }

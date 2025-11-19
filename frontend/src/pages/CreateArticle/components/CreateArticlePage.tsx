@@ -14,6 +14,46 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ActionButton } from '../../../components/ActionButton'
 import { useState } from 'react'
 
+const safeStringify = (value: unknown) => {
+  try {
+    return JSON.stringify(value, null, 2)
+  } catch {
+    return String(value)
+  }
+}
+
+const formatDetailedError = (error: unknown): string => {
+  if (error instanceof Error) {
+    const detailed: Record<string, unknown> = {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    }
+
+    const enrichedError = error as Error & Record<string, unknown>
+    const explicitKeys = ['status', 'code', 'payload', 'cause', 'response']
+    explicitKeys.forEach((key) => {
+      if (key in enrichedError) {
+        detailed[key] = enrichedError[key]
+      }
+    })
+
+    Object.getOwnPropertyNames(error).forEach((key) => {
+      if (!(key in detailed)) {
+        detailed[key] = enrichedError[key]
+      }
+    })
+
+    return safeStringify(detailed)
+  }
+
+  if (typeof error === 'object' && error !== null) {
+    return safeStringify(error)
+  }
+
+  return String(error)
+}
+
 export default function CreateArticlePage() {
   const [, setLocation] = useLocation()
   const queryClient = useQueryClient()
@@ -34,11 +74,7 @@ export default function CreateArticlePage() {
 
       setLocation(`/articulos/${newArticle.id}`)
     } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message)
-      } else {
-        setError('Error creando el artículo')
-      }
+      setError(`[DEBUG] ${formatDetailedError(error)}`)
     } finally {
       setIsLoading(false)
     }

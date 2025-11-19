@@ -29,12 +29,17 @@ export function useSession() {
   }, [selfUser, refetchSelf])
 
   const logout = () => {
-    SessionService.delete()
-    setUser(undefined)
-    setLocation('/sesion')
-    queryClient.invalidateQueries({ queryKey: ['self-user'] })
-  }
+    queryClient.invalidateQueries({ queryKey: ['self-user'] });
+    queryClient.removeQueries({
+      predicate: (query) =>
+        Array.isArray(query.queryKey) &&
+        query.queryKey[0] === 'articles'
+    });
 
+    SessionService.delete();
+    setUser(undefined);
+    setLocation('/sesion');
+  };
   const login = async (data: SignInFormData) => {
     const result = await AuthService.login(data)
 
