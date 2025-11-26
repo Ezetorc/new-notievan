@@ -4,25 +4,26 @@ import type { SignInFormData } from '../pages/SignIn/models/sign-in-form-data.mo
 import { HttpClient } from '../models/http-client.model'
 
 export class AuthService {
-  private static readonly API_BASE = '/auth'
+	private static readonly API_BASE = '/auth'
 
-  static async register(data: SignUpFormData): Promise<AuthResponse> {
-    const response = await HttpClient.post<AuthResponse>(
-      `${this.API_BASE}/register`,
-      data
-    )
+	static async register(data: SignUpFormData): Promise<AuthResponse> {
+		const response = await HttpClient.post<AuthResponse>(
+			`${AuthService.API_BASE}/register`,
+			data
+		)
 
-    if (response.error) throw new Error(response.error)
-    return response.data!
-  }
+		if (response.error) throw new Error(response.error)
+		return response.data!
+	}
 
-  static async login(data: SignInFormData): Promise<AuthResponse> {
-    const response = await HttpClient.post<AuthResponse>(
-      `${this.API_BASE}/login`,
-      data
-    )
+	static async login(data: SignInFormData): Promise<AuthResponse> {
+		const response = await HttpClient.post<AuthResponse>(
+			`${AuthService.API_BASE}/login`,
+			data
+		)
 
-    if (response.error) throw new Error(response.error || 'Error al iniciar sesión')
-    return response.data!
-  }
+		if (response.error)
+			throw new Error(response.error || 'Error al iniciar sesión')
+		return response.data!
+	}
 }

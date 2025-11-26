@@ -4,8 +4,8 @@ import { MarkdownEditor } from '../../../components/MarkdownEditor'
 import { ErrorMessage } from '../../../components/ErrorMessage'
 import { ImageInput } from '../../../components/ImageInput'
 import {
-  CreateArticleSchema,
-  type CreateArticleFormData
+	CreateArticleSchema,
+	type CreateArticleFormData
 } from '../models/create-article-form-data.model'
 import { useForm } from '../../../hooks/use-form.hook'
 import { ArticlesService } from '../../../services/articles.service'
@@ -14,48 +14,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ActionButton } from '../../../components/ActionButton'
 import { useState } from 'react'
 
-const safeStringify = (value: unknown) => {
-  try {
-    return JSON.stringify(value, null, 2)
-  } catch {
-    return String(value)
-  }
-}
-
-const formatDetailedError = (error: unknown): string => {
-  if (error instanceof Error) {
-    const detailed: Record<string, unknown> = {
-      name: error.name,
-      message: error.message,
-      stack: error.stack
-    }
-
-    const enrichedError = error as Error & Record<string, unknown>
-    const explicitKeys = ['status', 'code', 'payload', 'cause', 'response']
-    explicitKeys.forEach((key) => {
-      if (key in enrichedError) {
-        detailed[key] = enrichedError[key]
-      }
-    })
-
-    Object.getOwnPropertyNames(error).forEach((key) => {
-      if (!(key in detailed)) {
-        detailed[key] = enrichedError[key]
-      }
-    })
-
-    return safeStringify(detailed)
-  }
-
-  if (typeof error === 'object' && error !== null) {
-    return safeStringify(error)
-  }
-
-  return String(error)
-}
-
 export default function CreateArticlePage() {
-  const [, setLocation] = useLocation()
+	  const [, setLocation] = useLocation()
   const queryClient = useQueryClient()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string>('')
@@ -74,7 +34,11 @@ export default function CreateArticlePage() {
 
       setLocation(`/articulos/${newArticle.id}`)
     } catch (error) {
-      setError(`[DEBUG] ${formatDetailedError(error)}`)
+      if (error instanceof Error) {
+        setError(error.message)
+      } else {
+        setError('Error creando el artículo')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -88,57 +52,57 @@ export default function CreateArticlePage() {
     subtitle: ''
   })
 
-  return (
-    <form className='flex flex-col pb-[5vw] mobile:mt-[20px] tablet:mt-[60px]'>
-      <ArticleInput
-        placeholder='Subtítulo de tu artículo...'
-        minLength={1}
-        maxLength={50}
-        className='mobile:text-[20px] tablet:text-2xl font-bold font-text mb-5'
-        onChange={(value) => watch('subtitle', value)}
-      />
+	return (
+		<form className='flex flex-col pb-[5vw] mobile:mt-[20px] tablet:mt-[60px]'>
+			<ArticleInput
+				placeholder='Subtítulo de tu artículo...'
+				minLength={1}
+				maxLength={50}
+				className='mobile:text-[20px] tablet:text-2xl font-bold font-text mb-5'
+				onChange={(value) => watch('subtitle', value)}
+			/>
 
-      <ArticleInput
-        placeholder='Título de tu artículo...'
-        minLength={1}
-        maxLength={50}
-        className='mobile:text-4xl tablet:text-5xl font-title'
-        onChange={(value) => watch('title', value)}
-      />
+			<ArticleInput
+				placeholder='Título de tu artículo...'
+				minLength={1}
+				maxLength={50}
+				className='mobile:text-4xl tablet:text-5xl font-title'
+				onChange={(value) => watch('title', value)}
+			/>
 
-      <ArticleInput
-        className='mt-5 mobile:text-[20px] tablet:text-2xl  mb-[30px]'
-        placeholder='Descripción de tu artículo...'
-        minLength={1}
-        maxLength={50}
-        onChange={(value) => watch('description', value)}
-      />
+			<ArticleInput
+				className='mt-5 mobile:text-[20px] tablet:text-2xl  mb-[30px]'
+				placeholder='Descripción de tu artículo...'
+				minLength={1}
+				maxLength={50}
+				onChange={(value) => watch('description', value)}
+			/>
 
-      <div className='flex flex-col tablet:grid gap-6 tablet:gap-x-10 w-full tablet:grid-cols-[1fr] desktop:grid-cols-[3fr_1fr]'>
-        <div className='flex flex-col gap-y-4 tablet:gap-y-6 max-w-full order-2 tablet:order-1'>
-          <MarkdownEditor
-            onChange={(value) => watch('content', value)}
-            placeholder='Contenido de tu artículo...'
-          />
+			<div className='flex flex-col tablet:grid gap-6 tablet:gap-x-10 w-full tablet:grid-cols-[1fr] desktop:grid-cols-[3fr_1fr]'>
+				<div className='flex flex-col gap-y-4 tablet:gap-y-6 max-w-full order-2 tablet:order-1'>
+					<MarkdownEditor
+						onChange={(value) => watch('content', value)}
+						placeholder='Contenido de tu artículo...'
+					/>
 
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          {schemaError && <ErrorMessage>{schemaError}</ErrorMessage>}
-        </div>
+					 {error && <ErrorMessage>{error}</ErrorMessage>}
+          			 {schemaError && <ErrorMessage>{schemaError}</ErrorMessage>}
+				</div>
 
-        <aside className='flex flex-col gap-y-5 order-1 md:order-2'>
-          <ImageInput onImageSelected={(value) => watch('image', value)} />
-        </aside>
+				<aside className='flex flex-col gap-y-5 order-1 md:order-2'>
+					<ImageInput onImageSelected={(value) => watch('image', value)} />
+				</aside>
 
-        <div className='w-full order-3'>
-          <ActionButton
-            className='w-full bg-brand-orange text-white font-bold text-xl tablet:text-3xl h-[50px] tablet:h-[70px]'
-            loading={isLoading}
-            onClick={onSubmit}
-          >
-            Crear artículo
-          </ActionButton>
-        </div>
-      </div>
-    </form>
-  )
+				<div className='w-full order-3'>
+					<ActionButton
+						className='w-full bg-brand-orange text-white font-bold text-xl tablet:text-3xl h-[50px] tablet:h-[70px]'
+						loading={isLoading}
+						onClick={onSubmit}
+					>
+						Crear artículo
+					</ActionButton>
+				</div>
+			</div>
+		</form>
+	)
 }

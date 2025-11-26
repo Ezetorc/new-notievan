@@ -4,29 +4,29 @@ import { SessionService } from '../services/session.service'
 import type { Role } from '../models/role.model'
 
 export function ProtectedRoute<P extends Params>({
-  component: Component,
-  fallback,
-  userRole,
-  ...rest
+	component: Component,
+	fallback,
+	userRole,
+	...rest
 }: RouteProps<P> & { fallback?: string; userRole?: Role }) {
-  const [, setLocation] = useLocation()
+	const [, setLocation] = useLocation()
 
-  useEffect(() => {
-    if (!SessionService.value) {
-      setLocation(fallback || '/sesion')
-    }
-  }, [setLocation, fallback])
+	useEffect(() => {
+		if (!SessionService.value) {
+			setLocation(fallback || '/sesion')
+		}
+	}, [setLocation, fallback])
 
-  if (!SessionService.value) return null
+	if (!SessionService.value) return null
 
-  if (
-    userRole &&
-    SessionService.user?.role !== userRole &&
-    SessionService.user?.role !== 'ADMIN'
-  ) {
-    setLocation(fallback || '/cuenta')
-    return null
-  }
+	if (
+		userRole &&
+		SessionService.user?.role !== userRole &&
+		SessionService.user?.role !== 'ADMIN'
+	) {
+		setLocation(fallback || '/cuenta')
+		return null
+	}
 
-  return <Route<P> {...rest} component={Component} />
+	return <Route<P> {...rest} component={Component} />
 }

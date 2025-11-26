@@ -5,7 +5,6 @@ import { CreateArticleDto } from '../models/dtos/create-article.dto.js'
 import { PaginationParamsDto } from '../models/dtos/pagination-params.dto.js'
 import { OmitIdParamDto } from '../models/dtos/omit-id-param.dto.js'
 import { ArticlesService } from '../services/articles.service.js'
-import { UnauthorizedError } from '../models/errors/unauthorized.error.js'
 
 export class ArticlesController {
   static async findById(request: Request, response: Response) {

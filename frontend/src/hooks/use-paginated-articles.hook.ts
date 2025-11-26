@@ -3,54 +3,55 @@ import type { Article } from '../../../backend/prisma/generated/prisma'
 import { ArticlesService } from '../services/articles.service'
 
 type usePaginatedArticlesOptions = {
-  type?: 'all' | 'own' | 'random'
-  excludeId?: string
-  initialPage?: number
-  limit?: number
+	type?: 'all' | 'own' | 'random'
+	excludeId?: string
+	initialPage?: number
+	limit?: number
 }
 
 export function usePaginatedArticles({
-  type = 'all',
-  excludeId,
-  initialPage = 1,
-  limit = 4
+	type = 'all',
+	excludeId,
+	initialPage = 1,
+	limit = 4
 }: usePaginatedArticlesOptions) {
-  const query = useInfiniteQuery({
-    queryKey: excludeId
-      ? ['articles', type, limit, initialPage, excludeId]
-      : ['articles', type, limit, initialPage],
-    queryFn: async ({ pageParam }): Promise<Article[]> => {
-      const page = pageParam !== undefined ? pageParam : initialPage;
-      switch (type) {
-        case 'own':
-          return ArticlesService.getOwn({ page, limit });
-        case 'random':
-          if (excludeId) return ArticlesService.getRandom({ omitId: excludeId, limit });
-          return [];
-        default:
-          return ArticlesService.getAll({ page, limit });
-      }
-    },
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < limit) return undefined;
-      return allPages.length + initialPage;
-    },
-    initialPageParam: initialPage
-  })
+	const query = useInfiniteQuery({
+		queryKey: excludeId
+			? ['articles', type, limit, initialPage, excludeId]
+			: ['articles', type, limit, initialPage],
+		queryFn: async ({ pageParam }): Promise<Article[]> => {
+			const page = pageParam !== undefined ? pageParam : initialPage
+			switch (type) {
+				case 'own':
+					return ArticlesService.getOwn({ page, limit })
+				case 'random':
+					if (excludeId)
+						return ArticlesService.getRandom({ omitId: excludeId, limit })
+					return []
+				default:
+					return ArticlesService.getAll({ page, limit })
+			}
+		},
+		getNextPageParam: (lastPage, allPages) => {
+			if (lastPage.length < limit) return undefined
+			return allPages.length + initialPage
+		},
+		initialPageParam: initialPage
+	})
 
-  const articles = query.data?.pages.flat() ?? []
+	const articles = query.data?.pages.flat() ?? []
 
-  const hasMore = !!query.hasNextPage
-  const loading = query.isFetching && !query.isFetchingNextPage
+	const hasMore = !!query.hasNextPage
+	const loading = query.isFetching && !query.isFetchingNextPage
 
-  const loadMore = () => {
-    if (hasMore) query.fetchNextPage()
-  }
+	const loadMore = () => {
+		if (hasMore) query.fetchNextPage()
+	}
 
-  return {
-    articles,
-    loading,
-    hasMore,
-    loadMore
-  }
+	return {
+		articles,
+		loading,
+		hasMore,
+		loadMore
+	}
 }
